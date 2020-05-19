@@ -3,4 +3,8 @@ public class Animal {
         System.out.println("Hello");
     }
 
+    @Override
+    public String toString() {
+        return "Animal{}";
+    }
 }
