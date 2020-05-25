@@ -1,6 +1,9 @@
 import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +11,7 @@ import java.util.Date;
 public class RMIServer extends UnicastRemoteObject implements RMIServices {
     Person_list person_list=new Person_list();
     protected RMIServer() throws RemoteException {//costruttore in cui dichiaro di avere questa eccezione
+        super(7500);
     }
 
     public void Othersturff(){
@@ -61,11 +65,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIServices {
     public static void main(String arg[]){
         try {
             RMIServices services =new RMIServer();//ho assegnato il server all'interfaccia, perche di server voglio mostrare solo i servizi
-            Naming.rebind("listserver",services);//nome a cui si registra il server, tramite metodo statico rebind
-
+            //per i test locali
+           // Naming.rebind("listserver",services);//nome a cui si registra il server, tramite metodo statico rebind
+            System.setProperty("java.rmi.server.hostname","192.168.1.2");//invece dell'indirizzo mettere whitelodge.ns0.it
+            Registry registry= LocateRegistry.getRegistry();
+            registry.rebind("rmiservices",services);
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
